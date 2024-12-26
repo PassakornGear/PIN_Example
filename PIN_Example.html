@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่ารหัส PIN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .pin-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .pin-input {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+        .pin-input:focus {
+            outline: none;
+            border-color: red;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button.skip {
+            background-color: #f5f5f5;
+            color: #000;
+        }
+        .button.submit {
+            background-color: red;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Title เปลี่ยน ชื่อได้ตามที่ต้องการ -->
+    <h2>ตั้งค่ารหัส PIN</h2>
+    <div class="pin-input-container">
+        <input type="password" maxlength="1" class="pin-input" id="pin1" />
+        <input type="password" maxlength="1" class="pin-input" id="pin2" />
+        <input type="password" maxlength="1" class="pin-input" id="pin3" />
+        <input type="password" maxlength="1" class="pin-input" id="pin4" />
+        <input type="password" maxlength="1" class="pin-input" id="pin5" />
+        <input type="password" maxlength="1" class="pin-input" id="pin6" />
+    </div>
+    <div class="error-message" id="error-message">* รหัส PIN ต้องประกอบด้วยตัวเลข 6 หลัก</div>
+    <div id="result" style="font-size: 16px; color: green; margin-top: 20px;"></div>
+
+    <script>
+        const pinInputs = document.querySelectorAll('.pin-input');
+        const errorMessage = document.getElementById('error-message');
+        const result = document.getElementById('result');
+
+        // Function to validate numeric input only
+        function validateNumericInput(event) {
+            const key = event.key;
+            // Allow only numeric keys (0-9) and control keys like Backspace
+            if (!/^\d$/.test(key) && key !== 'Backspace') {
+                event.preventDefault(); // Prevent invalid input
+            }
+        }
+
+        // Handle input focus, auto move, and check complete PIN
+        pinInputs.forEach((input, index) => {
+            input.addEventListener('keydown', validateNumericInput); // Validate numeric input only
+            input.addEventListener('input', () => {
+                // Move to the next input if current one is filled
+                if (input.value.length === 1 && index < pinInputs.length - 1) {
+                    pinInputs[index + 1].focus();
+                }
+                // Check if all inputs are filled
+                checkCompletePin();
+            });
+            input.addEventListener('keydown', (e) => {
+                // Move back to the previous input on Backspace
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    pinInputs[index - 1].focus();
+                }
+            });
+        });
+
+        function checkCompletePin() {
+            const pin = Array.from(pinInputs).map(input => input.value).join('');
+            if (pin.length === 6) {
+                errorMessage.style.display = 'none';
+                result.textContent = `รหัส PIN ของคุณคือ: ${pin}`;
+            } else {
+                result.textContent = '';
+            }
+        }
+      
+    </script>
+    <!-- Copyright © 2024 Passakorn Pantapirat All right reserved  -->
+</body>
+</html>
